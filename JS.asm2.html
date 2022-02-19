@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Link bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <title>Bài Asm2 - Javascript</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+       body {
+           text-align: center;
+           margin: auto;
+           padding: 0;
+           font-size: 1.2rem;
+       }
+       .container-fluid {
+           padding: 0%;
+       }
+       h1 {
+           padding-top: 4%;
+       }
+       table {
+           margin-top: 3%;
+       }
+       th {
+           background-color: #efefef;
+       }
+       .footer-copyright {
+           background-color:rgb(238, 238, 238);
+           height: 50%;
+           margin-top: 6%;
+       }
+       .rowButton {
+           width: 70%;
+           margin: auto;
+       }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+    <h1>TRA CỨU BẢNG ĐIỂM </h1>
+    <h3>Lớp K210816DN - Trường Chuyên Trần Phú</h3>
+    <br>
+    <form class="form-data">
+        <div class="row">
+        <label for="name" class="col-12 col-sm-6 col-md-6 col-lg-3">
+            Họ và Tên: <input id="name" type="text" required>
+        </label>
+        <label for="math" class="col-12 col-sm-6 col-md-6 col-lg-3">
+            Điểm Toán: <input id="math-score" type="number">
+        </label>
+        <label for="physical" class="col-12 col-sm-6 col-md-6 col-lg-3">
+            Điểm Lý: <input id="physical-score" type="number">
+        </label>
+        <label for="chemistry" class="col-12 col-sm-6 col-md-6 col-lg-3">
+            Điểm Hóa: <input id="chemistry-score" type="number">
+        </label>
+        </div> <br>
+        <button id="button-confirm" type="button" onclick="getData()">Nhập vào bảng</button><br>
+    </form>
+    <!--Tạo table reponsive-->
+    <div class="table-responsive table-responsive-sm table-responsive-md table-responsive-lg">
+    <table id="myTable" class="table table-bordered">
+        <thead>
+            <tr>
+                <th style="width: 10%">STT</th>
+                <th style="width: 30%">Họ và Tên</th>
+                <th style="width: 15%">Toán</th>
+                <th style="width: 15%">Lý</th>
+                <th style="width: 15%">Hóa</th>
+                <th style="width: 15%">Trung Bình</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="trfirst" style="display: none;">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+    </div><br>
+    <!--Tạo các button-->
+    <form action="#">
+        <div class="row rowButton">
+            <button type="button" id="score-average" class="col-12 col-sm-6 col-md-6 col-lg-3" onclick="average()">Tính điểm trung bình</button>
+            <button type="button" id="good-students" class="col-12 col-sm-6 col-md-6 col-lg-3" onclick="goodStudents()">Học sinh giỏi</button>
+            <button type="button" id="bad-students" class="col-12 col-sm-6 col-md-6 col-lg-3" onclick="failed()">Học sinh thi lại</button>
+            <button type="button" class="col-12 col-sm-6 col-md-6 col-lg-3" onclick="document.getElementById('myTable').deleteRow(2)">Xóa đi một hàng</button>
+        </div>
+    </form>
+    <!--Footer-->
+    <footer>
+        <div class="footer-copyright">
+        <div class="col-md-12 text-center">
+            <p><i>Copyright &copy; FUNIX 2021.</i></p>
+            <p><i>Phòng Tổ Chức & Quản Lý Đào Tạo</i></p>
+        </div>
+    </footer>
+    <script>
+        // TODO: Đặt biến score để lưu trữ dữ liệu nhập vào = {tên học viên , điểm toán , điểm lý , điểm hóa}
+        var score = { 
+            fullName: "",
+            math: 0,
+            physical: 0,
+            chemistry: 0
+        };
+        // TODO: Chèn hàng - cột vào table
+        function getData() {
+        var table = document.getElementById('myTable');
+        var row = table.insertRow(table.rows.length);
+            cell1 = row.insertCell(0);
+            cell2 = row.insertCell(1);
+            cell3 = row.insertCell(2);
+            cell4 = row.insertCell(3);
+            cell5 = row.insertCell(4);
+            cell6 = row.insertCell(5);
+        // TODO: Gán giá trị score vào từng ô input tương ứng
+            score.fullName = document.getElementById('name').value;
+            score.math = document.getElementById('math-score').value;
+            score.physical = document.getElementById('physical-score').value;
+            score.chemistry = document.getElementById('chemistry-score').value;
+        // TODO: Lặp qua tất cả các hàng của bảng và gán vào ô tương ứng
+        for (var i = 0; row = table.rows[i]; i++) {
+            cell1.innerHTML = i - 1;
+            cell2.innerHTML = score.fullName;
+            cell3.innerHTML = score.math;
+            cell4.innerHTML = score.physical;
+            cell5.innerHTML = score.chemistry;
+            cell6.innerHTML = '?';
+        };
+        // TODO: Xóa trắng các ô input
+        document.getElementById('name').value = '';
+        document.getElementById('math-score').value = '';
+        document.getElementById('physical-score').value = '';
+        document.getElementById('chemistry-score').value = '';
+    };
+        /** TODO: Tính điểm trung bình 3 môn
+        * Dùng parseFloat(hoặc parselnt()) để chuyển 'string' sang 'number' (chuyển từng'string' sang 'number' rồi mới cộng lại)
+            Syntax: parseFloat(string)
+        * Dùng .toFixed(1) để lấy sau dấu thập phân 1 chữ số.
+            Syntax: number.toFixed(1)
+        */    
+        var table = document.getElementById("myTable");
+        function average() {
+        for (var j = 1; j < table.rows.length; j++) {
+            score.math = parseFloat(table.rows[j].cells[2].innerHTML);
+            score.physical = parseFloat(table.rows[j].cells[3].innerHTML);
+            score.chemistry = parseFloat(table.rows[j].cells[4].innerHTML);
+            var avg = (score.math + score.physical + score.chemistry) / 3;
+            table.rows[j].cells[5].innerHTML = avg.toFixed(1);
+            }
+        };
+        // TODO:  Xác định học sinh giỏi
+        function goodStudents() {
+            for (var j = 1; j < table.rows.length; j++) {
+                if (table.rows[j].cells[5].innerHTML >= 8) {
+                    table.rows[j].style.color = 'rgb(0,193,250)';
+                }
+            }
+        }
+        // TODO: Học sinh phải thi lại
+        function failed() {
+            for (j = 1; j < table.rows.length; j ++) {
+                if (table.rows[j].cells[5].innerHTML <= 4) {
+                    table.rows[j].style.color = 'red';
+                }
+            }
+        }
+    </script>
+    </div>
+</body>
+</html>

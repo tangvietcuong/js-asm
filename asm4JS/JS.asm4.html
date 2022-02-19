@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Link bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Thư viện jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- JS -->
+    <script src="/json.js"></script>
+    <title>Javascript - Bài Asm4</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        #mainContent {
+            background-color: #efefef;
+        }
+        .navbar {
+            background-color: rgb(145, 211, 250) !important;
+        }
+        h1 {
+            padding-left: 20%;
+            text-shadow: 2px 2px 2px grey;
+        }
+        ul {
+            padding-left: 5% !important;
+        }
+        li a {
+            color: #000 !important;
+            text-shadow: 2px 2px 2px grey;
+        }
+        .image img {
+            width: 100%;
+            height: 180px;
+            border: 1px solid lightgray;
+        }
+        img:hover {
+            opacity: 50%;
+        }
+        button:hover {
+            background-color:rgb(145, 211, 250);
+        }
+        .row {
+            margin: auto;
+            width: 100%;
+            height: 200px;
+            overflow:hidden; 
+            padding-top: 1%;
+        }
+        .navbar {
+            width: 100%;
+            height: 100px;
+        }
+        a {
+            text-decoration: underline;
+            color: rgb(0, 110, 255);
+        }
+        #searchImage img {
+            width: 50px;
+            height: 50px;
+        }
+        #searchField {
+            background-color: #efefef;
+            text-align: center;
+            display: none;
+        }
+        button {
+            margin: 2%;
+            height: 50px;
+            box-shadow: 5px 5px 2px grey;
+        }
+        /* Loading*/
+        .loader {
+            position: fixed;
+            margin: auto;
+            top: 50%;
+            left: 50%;          
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid rgb(243, 190, 148);
+            border-bottom: 16px solid rgb(243, 190, 148);
+            width: 120px;
+            height: 120px;
+            -webkit-animation: spin 2s linear infinite;
+            animation: spin 2s linear infinite;
+        }
+
+        @-webkit-keyframes spin {
+            0% { -webkit-transform: rotate(0deg); }
+            100% { -webkit-transform: rotate(360deg); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* No result */
+        .noResult {
+            margin: 10%;
+            display: none;
+        }
+        .noResult h3,h4 {
+            color: red;
+            padding-bottom: 2%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div id = "navbar">
+            <nav class="row navbar navbar-expand-sm bg-dark navbar-dark">
+                <!-- Links -->
+                <ul class="navbar-nav col-6 col-md-4">
+                  <li class="nav-item">
+                    <a class="nav-link" href="/JS.asm4.html">HOME</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">ABOUT US</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">HELP</a>
+                  </li>
+                </ul>
+                <div class="col-6 col-md-8">
+                    <h1>Hot News <a href="#" id="searchImage"><img src="./active-search.png" alt="active-search-button"></a></h1>
+                </div>
+            </nav>
+        </div>
+            <div id="searchField">
+                <fieldset>
+                    <legend>Search articles: </legend>
+                    <input type="text" name="search" id="search" placeholder="Search...."><br><br>
+                    <label for="date">From: </label>
+                        <input type="date" name="date" id="fromDate">
+                    <label for="date">To: </label>
+                        <input type="date" name="date" id="toDate">
+                    <label for="languages">
+                        Languages: 
+                        <select name="languages" id="selectLanguages">
+                            <option value="en">English</option>
+                            <option value="zh">Chinese</option>
+                            <option value="es">Spanish</option>
+                            <option value="fr">French</option>
+                            <option value="hi">Hindi</option>
+                            <option value="it">Italian</option>
+                        </select>
+                    </label>
+                    <br>
+                    <button type="button" id="btnSearch">
+                       SEARCH NOW
+                    </button>
+                </fieldset>
+            </div>
+        
+        
+        <div id="mainContent">
+        
+        </div>
+        <div id="loading"></div>
+        <div class="noResult">
+            <h3>Opps...</h3>
+            <h4>What's happened?</h4>
+            <p>We have a few suggestions for you:</p>
+            <ol>
+                <li>The content you searched for is not available, please search for <strong>another keyword</strong>.</li>
+                <li>
+                    You did not enter the correct date format (<strong>start and end date cannot be greater than current date
+                     or start date cannot be greater than end date.</strong>)
+                </li>
+            </ol>
+            <p></p>
+            <p>Return <a href="./JS.asm4.html">Homepage</a></p>
+        </div>
+    <script>
+    // API TOKEN 1: b3e9ed7d37a31e27eb44674f2e4a25d0
+    // API TOKEN 2: 35d155ec87c6ad9e985479e4b3da2fed
+    // API TOKEN 3: 227dfdcd3f9bd5eb535b0b1e978ac420
+    $(document).ready(function() {
+        $("#loading").addClass("loader");  // Add loading
+        var topAPI = 'https://gnews.io/api/v4/top-headlines?token=227dfdcd3f9bd5eb535b0b1e978ac420';
+        fetch(topAPI)                        
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            var x = data.articles;
+            // .map tạo ra 1 mảng mới, có cùng số phần tử vs mảng cũ
+            var y = x.map(function(itemData) {
+                return `<div class = "row">                   
+                <div class = "image col-6 col-md-4">
+                    <a href="${itemData.url}" target="_blank"><img src="${itemData.image}"></a>
+                </div>
+                <div class = "col-6 col-md-8">
+                    <a href="${itemData.url}" target="_blank">${itemData.title}</a>
+                    <br><br>
+                    <p><i>${itemData.publishedAt}</i></p>
+                    <p>${itemData.description}</p>
+                </div>
+                </div><hr>`;
+            })
+            // join các object
+            var z = y.join("");
+            // in vào id = "mainContent"
+            document.getElementById("mainContent").innerHTML = z;
+            // remove loading
+            $("#loading").removeClass("loader");   
+        })
+        .catch(function() {
+            alert('Something Wrong.Recheck!')
+        });
+        // TODO: Nhấn vào biểu tượng tìm kiếm sẽ ẩn hiện trường tìm kiếm
+        $("#searchImage").click(function() {
+            $("#searchField").toggle();
+        });
+        // TODO: Event Input: focus and blur ( thay đổi background-color và border)
+        $("input").focus(function() {
+            $(this).css({"background-color": "yellow","border": "1px solid green"});
+        });
+        $("input").blur(function() {
+            $(this).css({"background-color": "white","border": "1px solid grey"});
+        });
+        // TODO: Nhấn vào nút tìm kiếm:
+        $("button").click(function() {
+            $("#loading").addClass("loader");    // hiện loading
+            $("#mainContent").empty();           // làm trống phần nội dung tin
+            $("#searchField").toggle();           // ẩn hiện trường tìm kiếm
+            /**
+             * Search theo ngày tháng : bắt đầu (from) -> kết thúc (to)
+             * Định dang ngày tháng theo ISO 8601 (.toISOString) - vd: 2021-09-26T09:20:29.000Z
+             * Bỏ millisecond (.split)
+            */
+            var fromDate = $("#fromDate").val();
+            var fromDateSplit = "";
+            if(fromDate != "") {
+                var start = new Date(fromDate);   
+                startISO = start.toISOString();            
+                fromDateSplit = startISO.split('.')[0] + 'Z';  
+            }
+            // ngày tháng kết thúc : Tương tự như ngày tháng bắt đầu
+            var toDate = $("#toDate").val();
+            var toDateSplit = "";
+            if (toDate != "") {
+                var end = new Date(toDate);
+                endISO= end.toISOString();
+                toDateSplit = endISO.split('.')[0] + 'Z';
+            }
+            // đặt biến = giá trị ô input
+            var languagesSearch = $("#selectLanguages").val();
+            var keywords = $("#search").val();
+            // TODO: Lấy dữ liệu Search API
+            var searchAPI = 'https://gnews.io/api/v4/search?q='+ keywords +'&from='+ fromDateSplit +'&to='+
+                            toDateSplit +'&lang='+ languagesSearch +'&token=227dfdcd3f9bd5eb535b0b1e978ac420';
+            fetch(searchAPI)             
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {      
+                    var x = data.articles;
+                    // .map tạo ra 1 mảng mới, có cùng số phần tử vs mảng cũ
+                    var y = x.map(function(itemData) {
+                        return `<div class = "row">                   
+                        <div class = "image col-6 col-md-4">
+                            <a href="${itemData.url}" target="_blank"><img src="${itemData.image}"></a>
+                        </div>
+                        <div class = "col-6 col-md-8">
+                            <a href="${itemData.url}" target="_blank">${itemData.title}</a>
+                            <br><br>
+                            <p><i>${itemData.publishedAt}</i></p>
+                            <p>${itemData.description}</p>
+                        </div>
+                        </div>`;
+                    });
+                    // in vào id = "mainContent"    
+                    var z = y.join(" ");
+                    document.getElementById("mainContent").innerHTML = z;
+                    // remove loading
+                    $("#loading").removeClass("loader");
+                    // Nếu keywords không tìm thấy trong bài báo nào
+                    if (data.articles == "") {
+                        $(".noResult").css("display", "block");
+                    };
+                    // Xóa trắng các ô input
+                    $("#search").val("");
+                    $("#fromDate").val("");
+                    $("#toDate").val("");
+                })
+                .catch(function() {
+                    alert('Something Error.Recheck!')
+                });
+        });
+    });  
+    </script>
+    </div>
+</body>
+</html>

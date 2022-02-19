@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Link bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Thư viện jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Javascript - Bài Asm3</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            }
+        .container {
+            text-align: center;
+            margin: auto;
+            padding: 0;
+            font-size: 1.2rem;
+            overflow: hidden;
+        }
+        h1 {
+            padding-top: 1%;
+        }
+        #myTable th {
+            background-color: rgb(253, 218, 122);
+            border: 1px solid #000 !important;
+        }
+        tr,td {
+            border: 1px solid #000 !important;
+        }
+        label {
+            padding-top: 1%;
+            color: #fff;
+        }
+        fieldset {
+            background-color: #345;
+            padding-top: 1.5%;
+        }
+        button {
+            background-color: rgb(211, 211, 211);
+            color: rgb(4, 0, 255);
+        }
+        .rowButton {
+            width: 60%;
+            margin: auto;
+        }
+        .retest {
+            text-decoration: underline;
+            color:rgb(25, 0, 255);
+        }
+        .footer-copyright {
+            background-color:rgb(112, 148, 185);
+            height: 50%;
+            margin-top: 6%;
+       }
+    </style>
+</head>
+<body>
+    <div class="container">
+    <h1>TRA CỨU BẢNG ĐIỂM </h1>
+    <h3>Lớp K210816DN - Trường Chuyên Trần Phú</h3>
+    <p style="color: red;"><em>*LƯU Ý: Học sinh phải nhập đầy đủ thông tin dưới đây!</em></p>
+    <!-- TODO: Lập form dữ liệu người dùng (họ tên, điểm toán, lý, hóa) -->
+    <form action="#" id="userForm" name="userForm">
+        <fieldset>
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                <label for="userName">HỌ TÊN:</label><br>
+                <input id="userName" type="text" name="name" required>
+            </div>
+            <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                <label for="mathScore">ĐIỂM TOÁN:</label><br>
+                <input id="mathScore" type="number" name="math" required>
+            </div>
+            <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                <label for="physicalScore">ĐIỂM LÝ: </label><br>
+                <input id="physicalScore" type="number" name="physical" required>
+            </div>
+            <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                <label for="chemistryScore">ĐIỂM HÓA: </label><br>
+                <input id="chemistryScore" type="number" name="chemistry" required>
+            </div>
+            </div><br>
+        </fieldset><br>
+        <button id="btnConfirm" class="text-primary" type="button">NHẬP VÀO BẢNG</button>
+    </form><br>
+    <!--TODO: Tạo bảng in ra giá trị người dùng vừa nhập -->
+    <div class="table-responsive table-responsive-sm table-responsive-md table-responsive-lg">
+    <table id="myTable" class="table table-bordered">
+        <thead>
+        <tr>
+            <th style="width: 10%">STT</th>
+            <th style="width: 20%">Họ và Tên</th>
+            <th style="width: 13%">Toán</th>
+            <th style="width: 13%">Lý</th>
+            <th style="width: 13%">Hóa</th>
+            <th style="width: 15%">Trung Bình</th>
+            <th style="width: 16%">Xóa Dữ Liệu</th>
+        </tr>
+        </thead>
+        <tbody id="tableBody">
+        </tbody>
+    </table>
+    </div><br>
+    <div class="row rowButton">
+        <button class="col-12 col-sm-12 col-md-4 col-lg-4 text-primary" type="button" id="btnAverage">ĐIỂM TRUNG BÌNH</button>
+        <button class="col-12 col-sm-12 col-md-4 col-lg-4 text-primary" type="button" id="btnGoodStudents">HỌC SINH GIỎI</button>
+        <button class="col-12 col-sm-12 col-md-4 col-lg-4 text-primary" type="button" id="btnRetest">HỌC SINH THI LẠI</button>
+    </div>
+    <!--Footer-->
+    <footer>
+        <div class="footer-copyright">
+        <div class="col-md-12 text-center">
+            <p><i>Copyright &copy; FUNIX 2021.</i></p>
+            <p><i>Phòng Tổ Chức & Quản Lý Đào Tạo</i></p>
+        </div>
+    </footer>
+    <script>
+        $(document).ready(function() {
+            var i = 0;
+            $("#btnConfirm").click(function() {
+                // TODO: Đặt các biến = giá trị các id input tương ứng
+                var userName = $("#userName").val();
+                var math = $("#mathScore").val();
+                var physical = $("#physicalScore").val();
+                var chemistry = $("#chemistryScore").val();
+                var avg = "?";
+                // TODO: Tạo bảng
+                // Điều kiện: Nếu 1 trong các trường input rỗng thì báo học sinh nhập lại
+                if (userName == "" || math == "" || physical == "" || chemistry == "" || (math >10 || math <0) || (physical >10 || physical <0) || (chemistry >10 || chemistry <0)) {
+                    alert("Học sinh phải điền đầy đủ và đúng thông tin!");
+                    return false;
+                } else {
+                    i++;     // Số thứ tự tăng dần bắt đầu từ i++
+                    $("#tableBody").append(                     // .append() chèn nội dung vào cuối phần tử
+                    "<tr>" 
+                    + "<td>" + i + "</td>"
+                    + "<td>" + userName + "</td>"
+                    + "<td>" + math + "</td>"
+                    + "<td>" + physical + "</td>"
+                    + "<td>" + chemistry + "</td>"
+                    + "<td>" + avg + "</td>"
+                    + "<td>" + "<button type='button' id='btnDelete'>Xóa</button>" + "</td>" +        // Nút xóa 
+                    "</tr>"
+                    );
+                    // Xóa trắng ô input nhập dữ liệu
+                    $("#userName").val("");
+                    $("#mathScore").val("");
+                    $("#physicalScore").val("");
+                    $("#chemistryScore").val("");
+                }
+            });
+            /*  TODO: Tính điểm trung bình
+                - Sử dụng .each như 1 vòng lặp for để lặp qua các hàng của tbody.
+                - Sử dụng .eq() để chọn phần tử theo vị trí cụ thể, bắt đầu từ 0.
+                - Sử dụng parseFloat() để chuyển string về number.
+                - Sử dụng .toFixed(1) để lấy sau dấy phẩy 1 số
+            */ 
+            $("#btnAverage").click(function() {
+                $("tbody tr").each(function() {
+                    var math = $(this).children("td").eq(2).text();
+                    var physical = $(this).children("td").eq(3).text();
+                    var chemistry = $(this).children("td").eq(4).text();
+                    var avg = ((parseFloat(math) + parseFloat(physical) + parseFloat(chemistry)) / 3).toFixed(1);
+                    $(this).children("td").eq(5).text(avg);
+                });
+            });
+            // TODO: Xác định học sinh giỏi: xét điểm >= 8.0 thì đạt học sinh giỏi, định dạng chữ màu đỏ
+            $("#btnGoodStudents").click(function() {
+                $("tbody tr").each(function() {
+                    var avg = $(this).children("td").eq(5).text();
+                    if (avg >= 8.0) {
+                        $(this).css("color", "red");
+                    };
+                });
+            });
+            // TODO: Xác định học sinh thi lại: xét điểm < 4.0 thì học sinh phải thi lại, dùng .addClass để thêm Class. 
+            $("#btnRetest").click(function() {
+                $("tbody tr").each(function() {
+                    var avg = $(this).children("td").eq(5).text();
+                    if (avg < 4.0) {
+                        $(this).addClass("retest");
+                    };
+                });
+            });
+            // TODO: Xoá dòng bất kỳ và thay đổi số thứ tự
+            $("#myTable").on("click", "#btnDelete", function() {
+                $(this).closest("tr").remove();     // Xóa dòng gần nhất
+                var j = 1;                         // Dùng .each lặp qua các hàng của tbody, đặt lại số thứ tự từ 1.
+                $("tbody tr").each(function() {
+                    $(this).children("td").eq(0).text(j);
+                    j++;
+                });
+            });
+        });
+    </script>
+    </div>
+</body>
+</html>
